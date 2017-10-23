@@ -1,17 +1,17 @@
 <?
 
-/*
- * @todo Прикрепить производственный календарь
- * @todo добавить пространтсов имен
-*/
-
 class TimeTable extends DateTime {
 
   private $timeTableFile = "data/timetable.json";  // Файл с режимом работы
 
-  private $calendFile = ""; // Файл производственного календаря (будет попозже)
-
-  private $daysOfTheWeek = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
+  private $daysOfTheWeek = array(
+    "monday", 
+    "tuesday", 
+    "wednesday", 
+    "thursday", 
+    "friday", 
+    "saturday", 
+    "sunday");
   
   private $daysOfTheWeek_ru = array( 
     "monday"      => "понедельник", 
@@ -21,7 +21,6 @@ class TimeTable extends DateTime {
     "friday"      => "пятница", 
     "saturday"    => "суббота", 
     "sunday"      => "воскресенье" );
-
 
   /*
   * Метод для быстрого получения объекта из json-файла с данными

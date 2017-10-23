@@ -10,5 +10,4 @@ echo "<hr>";
 
 $timeTable->table();
 
-
 ?>
