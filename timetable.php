@@ -1,10 +1,20 @@
-<?
+<?php
+
+/**
+ * 
+ * @todo добавить namespace
+ * 
+ */
+
+// namespace TimeTable;
+
+
 
 class TimeTable extends DateTime {
 
   private $timeTableFile = "data/timetable.json";  // Файл с режимом работы
 
-  private $daysOfTheWeek = array(
+  private $daysOfTheWeek = array (
     "monday", 
     "tuesday", 
     "wednesday", 
@@ -23,7 +33,7 @@ class TimeTable extends DateTime {
     "sunday"      => "воскресенье" );
 
   /*
-  * Метод для быстрого получения объекта из json-файла с данными
+  * Метод для получения объекта из json-файла с данными
   * Возвращает объект
   */ 
   private function fileGetJson( $file )
@@ -162,7 +172,7 @@ class TimeTable extends DateTime {
 
 
   /*
-  * Метод выводт таблицу расписания работы
+  * Метод выводит таблицу расписания работы
   * Возвращает HTML таблицу table>tr*7>td*2
   */
   public function table() 

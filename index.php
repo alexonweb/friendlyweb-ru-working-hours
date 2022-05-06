@@ -1,8 +1,9 @@
 <?php
 
-include_once('timetable.php');
 
-$timeTable = new TimeTable;
+require 'timetable.php';
+
+$timeTable = new \TimeTable;
 
 $timeTable->friendly();
 
