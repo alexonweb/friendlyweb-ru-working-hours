@@ -1,18 +1,25 @@
 <?php
 
 /**
- * 
- * @todo добавить namespace
+ * Alexander Dalle
+ * dalle@criptext.com
  * 
  */
 
-// namespace TimeTable;
+namespace friendlyWeb;
 
+class TimeTable extends \DateTime {
 
+  private $timeTableFile = "timetable.json";  // Файл с режимом работы
 
-class TimeTable extends DateTime {
+  public function __construct() 
+  {
 
-  private $timeTableFile = "data/timetable.json";  // Файл с режимом работы
+    parent::__construct();
+
+    $this->timeTableFile = dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->timeTableFile;
+
+  }
 
   private $daysOfTheWeek = array (
     "monday", 
@@ -61,7 +68,7 @@ class TimeTable extends DateTime {
 
     $format = $this->format("Y-m-d ") . $time . ":00";
 
-    $datetime = new DateTime( $this->format($format) );
+    $datetime = new \DateTime( $this->format($format) );
 
     return $datetime;
 
@@ -73,7 +80,7 @@ class TimeTable extends DateTime {
   */
   private function getDayOfTheWeek ($dateNow = "now")
   {
-    $dateTimeNow = new DateTime($dateNow);
+    $dateTimeNow = new \DateTime($dateNow);
 
     $nowdayofweek = strtolower ( $dateTimeNow->format('l') );
 
@@ -219,7 +226,7 @@ class TimeTable extends DateTime {
 
         echo "</td><td>"; 
 
-        $date = new DateTime('now');  // @triky сбрасываем дату
+        $date = new \DateTime('now');  // @triky сбрасываем дату
 
         $date->modify('+' . $idays . ' day'); // @triky прибавляем нужное количество дней
         
@@ -253,12 +260,10 @@ class TimeTable extends DateTime {
 
       {
 
-        break; // зачем зря крутить циклы, не спинер же
+        break;
 
       }
       
-      // echo $i++; // отладочка
-
     }
 
     echo "</table>";
@@ -301,7 +306,7 @@ class TimeTable extends DateTime {
 
         echo "Сегодня работает до " . $timeMode->close; // открыто 
 
-                /* Перерыв на обед @todo вынести в отдельный метод */
+        /* Перерыв на обед @todo вынести в отдельный метод */
         echo " (перерыв ";
 
         $breakFrom = $timeTable->$nowDayOfTheWeek->break->from;
@@ -313,8 +318,7 @@ class TimeTable extends DateTime {
         } 
 
         echo "с " . $breakFrom . " до " . $breakTo . ")";
-        /* --- */
-
+      /* --- */
 
       };
 
