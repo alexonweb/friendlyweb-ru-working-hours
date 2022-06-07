@@ -8,7 +8,8 @@
 
 namespace friendlyWeb;
 
-class TimeTable extends \DateTime {
+class TimeTable extends \DateTime 
+{
 
   private $timeTableFile = "timetable.json";  // Файл с режимом работы
 
@@ -43,11 +44,10 @@ class TimeTable extends \DateTime {
   * Метод для получения объекта из json-файла с данными
   * Возвращает объект
   */ 
-  private function fileGetJson( $file )
+  private function fileGetJson($file)
   {
 
-    if ( file_exists( $file ) ) 
-    {
+    if (file_exists($file)) {
 
       $contents = file_get_contents($file);
 
@@ -68,7 +68,7 @@ class TimeTable extends \DateTime {
 
     $format = $this->format("Y-m-d ") . $time . ":00";
 
-    $datetime = new \DateTime( $this->format($format) );
+    $datetime = new \DateTime($this->format($format));
 
     return $datetime;
 
@@ -82,7 +82,7 @@ class TimeTable extends \DateTime {
   {
     $dateTimeNow = new \DateTime($dateNow);
 
-    $nowdayofweek = strtolower ( $dateTimeNow->format('l') );
+    $nowdayofweek = strtolower ($dateTimeNow->format('l'));
 
     return $nowdayofweek;
 
@@ -97,14 +97,14 @@ class TimeTable extends \DateTime {
 
     $isDayoff = false;
 
-    $nowdayoftheweek = $this->getDayOfTheWeek( $dateComparison );
+    $nowdayoftheweek = $this->getDayOfTheWeek($dateComparison);
 
     foreach ($timeTable->dayoff as $dayoff) 
     {
 
-      $dayoff = strtolower ( $dayoff );
+      $dayoff = strtolower ($dayoff);
 
-      if ( $nowdayoftheweek == $dayoff ) {
+      if ($nowdayoftheweek == $dayoff) {
 
         $isDayoff = true;
 
@@ -146,21 +146,18 @@ class TimeTable extends \DateTime {
   * Метод возвращает время открытия и закрытия с поправкой на различия расписания на разные дни недели
   * Возвращает объект вида $timesMode->open
   */
-  private function timesMode ($timeTable, $nowDayOfTheWeek) 
+  private function timesMode($timeTable, $nowDayOfTheWeek) 
   {
 
     $specialtimetable = property_exists($timeTable, $nowDayOfTheWeek); // Специальное расписание на сегодняшний день
 
-    if ( $specialtimetable ) 
-    {
+    if ($specialtimetable) {
 
       $alreadyOpenTime = $timeTable->$nowDayOfTheWeek->from;
 
       $alredyClosedTime = $timeTable->$nowDayOfTheWeek->to;
 
-    }
-      else
-    {
+    } else {
 
       $alreadyOpenTime = $timeTable->from;
 
@@ -168,7 +165,7 @@ class TimeTable extends \DateTime {
 
     }
 
-    $timesMode = (object) array(
+    $timesMode = (object)array(
       "open" => $alreadyOpenTime, 
       "close" => $alredyClosedTime 
     );
@@ -182,12 +179,12 @@ class TimeTable extends \DateTime {
   * Метод выводит таблицу расписания работы
   * Возвращает HTML таблицу table>tr*7>td*2
   */
-  public function table() 
+  public function table()
   {
 
     $timeTable = $this->fileGetJson($this->timeTableFile);
 
-    $daysOfTheWeek = array_merge ($this->daysOfTheWeek, $this->daysOfTheWeek); // @triky для начала списка с сегодняшнего дня
+    $daysOfTheWeek = array_merge($this->daysOfTheWeek, $this->daysOfTheWeek); // @triky для начала списка с сегодняшнего дня
 
     $todayIsDayOfTheWeek = $this->getDayOfTheWeek();
 
@@ -197,15 +194,13 @@ class TimeTable extends \DateTime {
 
     echo "<table>";
 
-    foreach ( $daysOfTheWeek as $dayOfTheWeek )
-    {
+    foreach ($daysOfTheWeek as $dayOfTheWeek) {
 
       $dayOfTheWeek = strtolower($dayOfTheWeek);
 
       $htmlClassToday = "";
 
-      if ( $todayIsDayOfTheWeek == $dayOfTheWeek )
-      { 
+      if ($todayIsDayOfTheWeek == $dayOfTheWeek) { 
 
         $passedToday = true;
 
@@ -213,8 +208,7 @@ class TimeTable extends \DateTime {
 
       }
 
-      if ( $passedToday && $idays < 7 )
-      {
+      if ($passedToday && $idays < 7) {
 
         echo "<tr$htmlClassToday><td>";
 
@@ -232,21 +226,15 @@ class TimeTable extends \DateTime {
         
         $dayOff = $this->isDayoff($timeTable, $date->format('Y-m-d H:i') ) ;
         
-        if ($dayOff) 
-        {
+        if ($dayOff) {
 
           echo "<em>закрыто</em>";
 
-        }
-
-        else 
-        
-        {
+        } else {
 
          $timeMode = $this->timesMode ($timeTable, $dayOfTheWeek);
 
          echo $timeMode->open . " &mdash; " . $timeMode->close;
-
 
         }
 
@@ -254,11 +242,7 @@ class TimeTable extends \DateTime {
 
         $idays++;
 
-      } 
-
-        elseif ( $idays >= 7 )
-
-      {
+      } elseif ($idays >= 7) {
 
         break;
 
@@ -282,27 +266,24 @@ class TimeTable extends \DateTime {
     $timeMode         = $this->timesMode ($timeTable, $nowDayOfTheWeek);
     $isDayoff         = $this->isDayoff($timeTable);
 
-    if ( !$isDayoff ) 
-    {
+    if (!$isDayoff) {
 
       $alreadyOpen = $this->timeInterval($timeMode->open);
 
       $alredyClosed = $this->timeInterval($timeMode->close);
 
-      if ( $alreadyOpen and $alredyClosed ) // время откытия и закрытия уже прошло
-      {
+      // время откытия и закрытия уже прошло
+      if ($alreadyOpen and $alredyClosed) {
 
         $closed = true; // Уже закрыто на сегодня
 
-      }
-      elseif ( !$alreadyOpen and !$alredyClosed )  // время открытия и закрытия еще не наступило
-      {
+      // время открытия и закрытия еще не наступило
+      } elseif (!$alreadyOpen and !$alredyClosed) {
 
         echo "Откроется в " . $timeMode->open; // Еще закрыто
 
-      }
-      elseif ( $alreadyOpen and !$alredyClosed )  // время открытия прошло и время закрытия еще не прошло
-      {
+      // время открытия прошло и время закрытия еще не прошло
+      } elseif ($alreadyOpen and !$alredyClosed) {
 
         echo "Сегодня работает до " . $timeMode->close; // открыто 
 
@@ -318,22 +299,16 @@ class TimeTable extends \DateTime {
         } 
 
         echo "с " . $breakFrom . " до " . $breakTo . ")";
-      /* --- */
 
       };
 
-    }
-    else
-    {
+    } else {
 
       $closed = true; // Закрыто потому что выходной
 
     }
 
-    // Как насчет завтра?
-
-    if ( $closed )
-    {
+    if ($closed) {
 
       echo "Закрыто";
 
@@ -343,10 +318,9 @@ class TimeTable extends \DateTime {
 
       $isDayoff = $this->isDayoff($timeTable, $date->format('Y-m-d H:i')  );
       
-      if ( !$isDayoff ) 
-      {
+      if (!$isDayoff) {
 
-        $nowDayOfTheWeek = $this->getDayOfTheWeek( $date->format('Y-m-d H:i') );
+        $nowDayOfTheWeek = $this->getDayOfTheWeek($date->format('Y-m-d H:i'));
 
         $timeMode = $this->timesMode ($timeTable, $nowDayOfTheWeek);
 
@@ -359,6 +333,5 @@ class TimeTable extends \DateTime {
   }
 
 }
-
 
 ?>
